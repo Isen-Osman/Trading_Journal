@@ -1,0 +1,9 @@
+services:
+  isen-journal:
+    build: .
+    container_name: tradingjournal-isen
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./trades.db:/app/trades.db
+    restart: always

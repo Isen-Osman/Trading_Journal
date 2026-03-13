@@ -107,4 +107,4 @@ if __name__ == '__main__':
     init_db()
     print("\n✅ ISEN Trading Journal running!")
     print("📊 Open: http://localhost:5000\n")
-    app.run(debug=False, port=5000)
+    app.run(host='0.0.0.0', debug=False, port=5000)
