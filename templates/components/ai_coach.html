@@ -1,0 +1,36 @@
+<div id="ai-tab" class="tab-content">
+  <div class="main-grid">
+    <div class="ai-vision-section form-section" style="border-color: var(--accent);">
+      <div class="section-title" style="color: var(--accent);">// AI Визуелна Анализа на Графикон</div>
+      <div class="ai-vision-grid">
+        <div class="form-group">
+          <label>Прикачи Скриншот (TradingView)</label>
+          <div class="upload-container" onclick="document.getElementById('chartUpload').click()">
+            <input type="file" id="chartUpload" hidden accept="image/*" onchange="previewImage(event)">
+            <div id="uploadPreview" class="upload-preview">
+              <span>📁 Кликни за прикачување слика</span>
+            </div>
+          </div>
+        </div>
+        <div class="ai-vision-action">
+          <p class="ai-description">AI ќе ги детектира клучните зони за купување/продажба, поддршка и отпор.</p>
+          <button class="ai-btn" id="aiVisionBtn" onclick="analyzeChart()">
+            <span class="btn-icon">👁️</span> АНАЛИЗИРАЈ ГРАФИКОН
+          </button>
+        </div>
+      </div>
+      <div class="ai-response-container" id="aiVisionResponse"></div>
+    </div>
+
+    <div class="sidebar">
+      <div class="rules-card ai-card">
+        <div class="section-title">// AI Тренер за Перформанси</div>
+        <p class="ai-description">Целосна анализа на вашата историја и психологија.</p>
+        <button class="ai-btn" id="aiAnalyzeBtn" onclick="analyzeTrades()">
+          <span class="btn-icon">✨</span> ДОБИЈ AI АНАЛИЗА
+        </button>
+        <div class="ai-response-container" id="aiResponse"></div>
+      </div>
+    </div>
+  </div>
+</div>

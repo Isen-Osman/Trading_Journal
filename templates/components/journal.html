@@ -1,0 +1,147 @@
+<div id="journal-tab" class="tab-content active">
+  <div class="main-grid">
+    <!-- Form -->
+    <div>
+      <div class="form-section">
+        <div class="section-title">// Нов Влез во Трејд</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Датум</label>
+            <input type="date" id="tradeDate">
+          </div>
+          <div class="form-group">
+            <label>Време</label>
+            <input type="time" id="tradeTime">
+          </div>
+          <div class="form-group">
+            <label>Пар</label>
+            <select id="tradePair" onchange="calcRR()">
+              <option value="XAU/USD">XAU/USD (Злато)</option>
+              <option value="EUR/USD">EUR/USD</option>
+              <option value="GBP/USD">GBP/USD</option>
+              <option value="BTC/USD">BTC/USD</option>
+              <option value="Other">Друго</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Сесија</label>
+            <select id="tradeSession">
+              <option value="London (08-11)">London 08:00–11:00</option>
+              <option value="NY (17-20)">New York 17:00–20:00</option>
+              <option value="Other">Друго</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label>Насока</label>
+            <div class="direction-group">
+              <button class="dir-btn buy"  onclick="setDirection('buy')">▲ BUY</button>
+              <button class="dir-btn sell" onclick="setDirection('sell')">▼ SELL</button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Влезна Цена</label>
+            <input type="number" id="entryPrice" placeholder="2315.50" step="0.01" oninput="calcRR()">
+          </div>
+          <div class="form-group">
+            <label>Лот (Lot Size)</label>
+            <input type="number" id="lotSize" placeholder="0.01" step="0.001">
+          </div>
+          <div class="form-group">
+            <label>Stop Loss</label>
+            <input type="number" id="stopLoss" placeholder="2312.00" step="0.01" oninput="calcRR()">
+          </div>
+          <div class="form-group">
+            <label>Take Profit</label>
+            <input type="number" id="takeProfit" placeholder="2322.00" step="0.01" oninput="calcRR()">
+          </div>
+          <div class="form-group full">
+            <label>Калкулација на Ризик</label>
+            <div class="rr-display" id="rrDisplay">Внесете Цена и SL за пресметка</div>
+          </div>
+          <div class="form-group">
+            <label>Излезна Цена</label>
+            <input type="number" id="exitPrice" placeholder="2320.00" step="0.01">
+          </div>
+          <div class="form-group">
+            <label>П&Л ($)</label>
+            <input type="number" id="pnlAmount" placeholder="+4.20" step="0.01">
+          </div>
+          <div class="form-group">
+            <label>Резултат</label>
+            <select id="tradeResult">
+              <option value="WIN">✅ ДОБИВКА</option>
+              <option value="LOSS">❌ ЗАГУБА</option>
+              <option value="BE">➖ BREAKEVEN</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Стратегија</label>
+            <select id="tradeStrategy">
+              <option value="S/R Bounce">S/R Bounce</option>
+              <option value="SMC">SMC</option>
+              <option value="Breakout">Breakout</option>
+              <option value="Trend Follow">Trend Follow</option>
+              <option value="Other">Друго</option>
+            </select>
+          </div>
+          <div class="form-group full">
+            <label>Емоција пред влез</label>
+            <div class="emotion-group" id="emotionGroup">
+              <button class="emo-btn" onclick="setEmotion('Calm')">😌 Calm</button>
+              <button class="emo-btn" onclick="setEmotion('FOMO')">😰 FOMO</button>
+              <button class="emo-btn" onclick="setEmotion('Confident')">💪 Confident</button>
+              <button class="emo-btn" onclick="setEmotion('Revenge')">😤 Revenge</button>
+              <button class="emo-btn" onclick="setEmotion('Anxious')">😟 Anxious</button>
+            </div>
+          </div>
+          <div class="form-group full">
+            <button class="submit-btn" onclick="addTrade()">+ ЗАЧУВАЈ ТРЕЈД</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Историја Табела -->
+      <div class="trades-section" style="margin-top: 20px;">
+        <div class="trades-header">
+          <div class="section-title" style="margin-bottom:0">// Историја</div>
+          <button class="clear-btn" onclick="clearAll()">Избриши Сè</button>
+        </div>
+        <div class="trades-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Датум</th>
+                <th>Пар</th>
+                <th>Дир.</th>
+                <th>Влез</th>
+                <th>SL</th>
+                <th>TP</th>
+                <th>R:R</th>
+                <th>Резултат</th>
+                <th>П&Л</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="tradesBody"></tbody>
+          </table>
+          <div class="empty-state" id="emptyState">📈 Нема внесени трејдови.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar Правила -->
+    <div class="sidebar">
+      <div class="rules-card">
+        <div class="section-title">// ПРАВИЛА</div>
+        <div class="rule-item"><span class="rule-num">01</span><span class="rule-text"><strong>Макс 1% ризик</strong> по трејд.</span></div>
+        <div class="rule-item"><span class="rule-num">02</span><span class="rule-text"><strong>Никогаш без SL.</strong> Без исклучоци.</span></div>
+        <div class="rule-item"><span class="rule-num">03</span><span class="rule-text"><strong>Мин R:R 1:2.</strong> Ако не е, прескокни.</span></div>
+      </div>
+      <div class="rules-card">
+        <div class="section-title">// ПСИХОЛОШКИ ТЕСТ</div>
+        <div class="rule-item"><span class="rule-num">✓</span><span class="rule-text">Дали сум смирен пред овој трејд?</span></div>
+        <div class="rule-item"><span class="rule-num">✓</span><span class="rule-text">Дали влегувам со план или FOMO?</span></div>
+      </div>
+    </div>
+  </div>
+</div>

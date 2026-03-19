@@ -43,13 +43,83 @@ body::before {
   z-index: 1;
 }
 
-/* Header */
-header {
-  padding: 32px 0 24px;
+/* Navbar Styles */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: rgba(10, 10, 15, 0.8);
+  backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
+  z-index: 1000;
   display: flex;
   align-items: center;
+}
+
+.nav-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 20px;
+  display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-item {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 8px 0;
+  position: relative;
+}
+
+.nav-item:hover { color: var(--text); }
+
+.nav-item.active {
+  color: var(--gold);
+}
+
+.nav-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gold);
+  border-radius: 2px;
+}
+
+/* Tab Management */
+.tab-content {
+  display: none;
+  animation: fadeInUp 0.5s ease forwards;
+  padding-top: 100px; /* Space for fixed navbar */
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Adjustments */
+header { display: none; } /* Remove old header */
+
+@media (max-width: 768px) {
+  .nav-links { gap: 16px; }
+  .nav-item { font-size: 11px; }
+  .logo-text { display: none; }
 }
 
 .logo {
