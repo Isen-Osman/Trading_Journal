@@ -1,110 +1,43 @@
 """
-ISEN Trading Journal — Local Server
+ISEN Trading Journal — Local Server (Onion Architecture)
 Run: python server.py
-Open: http://localhost:5000
+Open: http://localhost:8080
 """
 
-from flask import Flask, request, jsonify, send_from_directory
-import sqlite3
+from flask import Flask, send_from_directory
+from src.infrastructure.database import init_db
+from src.infrastructure.persistence.sqlite_repository import SQLiteTradeRepository
+from src.application.services import TradeService
+from src.api.routes import create_trade_blueprint
 import os
 
-app = Flask(__name__, static_folder='.')
-DB = 'trades.db'
+DB_PATH = 'trades.db'
+STATIC_FOLDER = 'static'
 
-# ─── DATABASE SETUP ──────────────────────────────────
-def init_db():
-    conn = sqlite3.connect(DB)
-    conn.execute('''
-        CREATE TABLE IF NOT EXISTS trades (
-            id        INTEGER PRIMARY KEY AUTOINCREMENT,
-            date      TEXT,
-            time      TEXT,
-            pair      TEXT,
-            session   TEXT,
-            direction TEXT,
-            entry     REAL,
-            sl        REAL,
-            tp        REAL,
-            exit      REAL,
-            pnl       REAL,
-            result    TEXT,
-            strategy  TEXT,
-            emotion   TEXT,
-            reason    TEXT,
-            notes     TEXT,
-            lot       REAL,
-            rr        TEXT,
-            created   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-    ''')
-    conn.commit()
-    conn.close()
+# 1. Initialize Infrastructure
+init_db(DB_PATH)
+repository = SQLiteTradeRepository(DB_PATH)
 
-def get_db():
-    conn = sqlite3.connect(DB)
-    conn.row_factory = sqlite3.Row
-    return conn
+# 2. Initialize Application Layer
+trade_service = TradeService(repository)
 
-# ─── ROUTES ──────────────────────────────────────────
+# 3. Setup Flask API Layer
+app = Flask(__name__, static_folder=STATIC_FOLDER)
+
+# Register API routes
+api_blueprint = create_trade_blueprint(trade_service)
+app.register_blueprint(api_blueprint, url_prefix='/api')
+
+# Serve Frontend
 @app.route('/')
 def index():
-    return send_from_directory('.', 'index.html')
+    return send_from_directory(STATIC_FOLDER, 'index.html')
 
 @app.route('/<path:filename>')
 def static_files(filename):
-    return send_from_directory('.', filename)
+    return send_from_directory(STATIC_FOLDER, filename)
 
-# GET all trades
-@app.route('/api/trades', methods=['GET'])
-def get_trades():
-    conn = get_db()
-    trades = conn.execute('SELECT * FROM trades ORDER BY created DESC').fetchall()
-    conn.close()
-    return jsonify([dict(t) for t in trades])
-
-# POST new trade
-@app.route('/api/trades', methods=['POST'])
-def add_trade():
-    data = request.json
-    conn = get_db()
-    conn.execute('''
-        INSERT INTO trades (date, time, pair, session, direction, entry, sl, tp,
-                            exit, pnl, result, strategy, emotion, reason, notes, lot, rr)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ''', (
-        data.get('date'), data.get('time'), data.get('pair'), data.get('session'),
-        data.get('direction'), data.get('entry'), data.get('sl'), data.get('tp'),
-        data.get('exit'), data.get('pnl'), data.get('result'), data.get('strategy'),
-        data.get('emotion'), data.get('reason'), data.get('notes'),
-        data.get('lot'), data.get('rr')
-    ))
-    conn.commit()
-    new_id = conn.execute('SELECT last_insert_rowid()').fetchone()[0]
-    trade  = conn.execute('SELECT * FROM trades WHERE id = ?', (new_id,)).fetchone()
-    conn.close()
-    return jsonify(dict(trade)), 201
-
-# DELETE trade
-@app.route('/api/trades/<int:trade_id>', methods=['DELETE'])
-def delete_trade(trade_id):
-    conn = get_db()
-    conn.execute('DELETE FROM trades WHERE id = ?', (trade_id,))
-    conn.commit()
-    conn.close()
-    return jsonify({'deleted': trade_id})
-
-# DELETE all trades
-@app.route('/api/trades', methods=['DELETE'])
-def clear_trades():
-    conn = get_db()
-    conn.execute('DELETE FROM trades')
-    conn.commit()
-    conn.close()
-    return jsonify({'cleared': True})
-
-# ─── START ───────────────────────────────────────────
 if __name__ == '__main__':
-    init_db()
-    print("\n✅ ISEN Trading Journal running!")
-    print("📊 Open: http://localhost:5000\n")
-    app.run(host='0.0.0.0', debug=False, port=5000)
+    print("\n✅ Amir Trading Journal running with Onion Architecture!")
+    print("📊 Open: http://localhost:8085\n")
+    app.run(host='0.0.0.0', debug=False, port=8085)

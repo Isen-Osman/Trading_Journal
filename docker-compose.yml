@@ -1,9 +1,9 @@
 services:
-  isen-journal:
+  amir-journal:
     build: .
-    container_name: tradingjournal-isen
+    container_name: tradingjournal-amir
     ports:
-      - "5001:5000"
+      - "5001:8080"
     volumes:
       - ./trades.db:/app/trades.db
     restart: always
