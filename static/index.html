@@ -168,6 +168,31 @@
         </div>
       </div>
 
+      <!-- AI Chart Analysis -->
+      <div class="form-section ai-vision-section" style="margin-top: 20px; border-color: var(--accent);">
+        <div class="section-title" style="color: var(--accent);">// AI Визуелна Анализа на Графикон</div>
+        <div class="ai-vision-grid">
+          <div class="form-group">
+            <label>Прикачи Скриншот (TradingView)</label>
+            <div class="upload-container" onclick="document.getElementById('chartUpload').click()">
+              <input type="file" id="chartUpload" hidden accept="image/*" onchange="previewImage(event)">
+              <div id="uploadPreview" class="upload-preview">
+                <span>📁 Кликни за прикачување слика</span>
+              </div>
+            </div>
+          </div>
+          <div class="ai-vision-action">
+            <p class="ai-description">AI ќе ги детектира клучните зони за купување/продажба, поддршка и отпор.</p>
+            <button class="ai-btn" id="aiVisionBtn" onclick="analyzeChart()">
+              <span class="btn-icon">👁️</span> АНАЛИЗИРАЈ ГРАФИКОН
+            </button>
+          </div>
+        </div>
+        <div class="ai-response-container" id="aiVisionResponse" style="margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;">
+          <!-- Резултатот ќе се појави тука -->
+        </div>
+      </div>
+
       <!-- Profit Chart -->
       <div class="chart-section" style="margin-top: 20px;">
         <div class="section-title">// Profit Curve (Cumulative P&L)</div>
@@ -213,54 +238,54 @@
     <!-- Sidebar -->
     <div class="sidebar">
       <div class="rules-card">
-        <div class="section-title">// Rules</div>
+        <div class="section-title">// ПРАВИЛА</div>
         <div class="rule-item">
           <span class="rule-num">01</span>
-          <span class="rule-text"><strong>Max 1% risk</strong> per trade. With $200 = $2 risk.</span>
+          <span class="rule-text"><strong>Макс 1% ризик</strong> по трејд. Со $200 = $2 ризик.</span>
         </div>
         <div class="rule-item">
           <span class="rule-num">02</span>
-          <span class="rule-text"><strong>Never trade without SL.</strong> Every trade must have a stop loss.</span>
+          <span class="rule-text"><strong>Никогаш без SL.</strong> Секој трејд мора да има стоп лос.</span>
         </div>
         <div class="rule-item">
           <span class="rule-num">03</span>
-          <span class="rule-text"><strong>Min R:R 1:2.</strong> If it doesn't meet this, skip it.</span>
+          <span class="rule-text"><strong>Мин R:R 1:2.</strong> Ако не го исполнува ова, прескокни го.</span>
         </div>
         <div class="rule-item">
           <span class="rule-num">04</span>
-          <span class="rule-text"><strong>No FOMO.</strong> If you missed it, the next setup will come.</span>
+          <span class="rule-text"><strong>Без FOMO.</strong> Ако си го пропуштил, ќе дојде нов сетап.</span>
         </div>
         <div class="rule-item">
           <span class="rule-num">05</span>
-          <span class="rule-text"><strong>Max 3 trades</strong> per day. More = mistakes.</span>
+          <span class="rule-text"><strong>Макс 3 трејда</strong> дневно. Повеќе = грешки.</span>
         </div>
         <div class="rule-item">
           <span class="rule-num">06</span>
-          <span class="rule-text"><strong>After 2 losses</strong> — stop for the day. No exceptions.</span>
+          <span class="rule-text"><strong>После 2 загуби</strong> — прекини за денес. Без исклучоци.</span>
         </div>
         <div class="rule-item">
           <span class="rule-num">07</span>
-          <span class="rule-text"><strong>Review journal</strong> every Friday. Learn from mistakes.</span>
+          <span class="rule-text"><strong>Преглед на журнал</strong> секој петок. Учи од грешките.</span>
         </div>
       </div>
 
       <div class="rules-card">
-        <div class="section-title">// Psychology Check</div>
+        <div class="section-title">// ПСИХОЛОШКИ ТЕСТ</div>
         <div class="rule-item">
           <span class="rule-num">✓</span>
-          <span class="rule-text">Am I calm before this trade?</span>
+          <span class="rule-text">Дали сум смирен пред овој трејд?</span>
         </div>
         <div class="rule-item">
           <span class="rule-num">✓</span>
-          <span class="rule-text">Does the setup meet my rules?</span>
+          <span class="rule-text">Дали сетапот ги исполнува моите правила?</span>
         </div>
         <div class="rule-item">
           <span class="rule-num">✓</span>
-          <span class="rule-text">Am I entering because of a plan or FOMO?</span>
+          <span class="rule-text">Дали влегувам поради план или поради FOMO?</span>
         </div>
         <div class="rule-item">
           <span class="rule-num">✓</span>
-          <span class="rule-text">Am I ready to accept the loss if it hits SL?</span>
+          <span class="rule-text">Подготвен ли сум да прифатам загуба ако удри SL?</span>
         </div>
       </div>
 
