@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amir — Trading Journal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<!-- NAVBAR (Заеднички за сите) -->
+<nav class="navbar">
+  <div class="nav-container">
+    <div class="logo">
+      <div class="logo-icon">XAU</div>
+      <div class="logo-text">Amir <span>JOURNAL</span></div>
+    </div>
+    <ul class="nav-links">
+      <li class="nav-item active" onclick="switchTab('journal')">📊 Журнал</li>
+      <li class="nav-item" onclick="switchTab('ai')">✨ AI Анализа</li>
+      <li class="nav-item" onclick="switchTab('stats')">📈 Статистика</li>
+    </ul>
+    <div class="header-date" id="currentDate"></div>
+  </div>
+</nav>
+
+<div class="container">
+  {% include 'components/journal.html' %}
+  {% include 'components/ai_coach.html' %}
+  {% include 'components/statistics.html' %}
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="/static/js/app.js"></script>
+</body>
+</html>

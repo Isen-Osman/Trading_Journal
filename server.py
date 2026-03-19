@@ -1,10 +1,10 @@
 """
 ISEN Trading Journal — Local Server (Onion Architecture)
 Run: python server.py
-Open: http://localhost:8080
+Open: http://localhost:8085
 """
 
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, render_template
 from src.infrastructure.database import init_db
 from src.infrastructure.persistence.sqlite_repository import SQLiteTradeRepository
 from src.application.services import TradeService
@@ -24,7 +24,7 @@ trade_service = TradeService(repository)
 ai_service = AIService()
 
 # 3. Setup Flask API Layer
-app = Flask(__name__, static_folder=STATIC_FOLDER)
+app = Flask(__name__, static_folder=STATIC_FOLDER, template_folder='templates')
 
 # Register API routes
 api_blueprint = create_trade_blueprint(trade_service, ai_service)
@@ -33,13 +33,13 @@ app.register_blueprint(api_blueprint, url_prefix='/api')
 # Serve Frontend
 @app.route('/')
 def index():
-    return send_from_directory(STATIC_FOLDER, 'index.html')
+    return render_template('base.html')
 
-@app.route('/<path:filename>')
+@app.route('/static/<path:filename>')
 def static_files(filename):
     return send_from_directory(STATIC_FOLDER, filename)
 
 if __name__ == '__main__':
-    print("\n✅ Amir Trading Journal running with Onion Architecture!")
+    print("\n✅ Amir Trading Journal running with Professional Architecture!")
     print("📊 Open: http://localhost:8085\n")
     app.run(host='0.0.0.0', debug=False, port=8085)

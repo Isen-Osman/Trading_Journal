@@ -1,3 +1,25 @@
+// ─── NAVIGATION ────────────────────────────────────────
+function switchTab(tabId) {
+  // Update nav links
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.classList.remove('active');
+    if (item.textContent.toLowerCase().includes(tabId === 'stats' ? 'статистика' : tabId === 'ai' ? 'анализа' : 'журнал')) {
+      item.classList.add('active');
+    }
+  });
+
+  // Show selected tab content
+  document.querySelectorAll('.tab-content').forEach(tab => {
+    tab.classList.remove('active');
+  });
+  document.getElementById(`${tabId}-tab`).classList.add('active');
+
+  // Re-render chart if switching to stats
+  if (tabId === 'stats') {
+    loadTrades(); 
+  }
+}
+
 // ─── API CALLS (SQLite via Python server) ────────────
 const API = '/api/trades';
 
