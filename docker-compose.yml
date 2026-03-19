@@ -3,7 +3,7 @@ services:
     build: .
     container_name: tradingjournal-amir
     ports:
-      - "5001:8080"
+      - "8085:8085"
     volumes:
       - ./trades.db:/app/trades.db
     restart: always
