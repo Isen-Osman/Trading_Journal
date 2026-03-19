@@ -1,7 +1,8 @@
 from flask import Blueprint, request, jsonify, send_from_directory
 from src.application.services import TradeService
+from src.application.ai_service import AIService
 
-def create_trade_blueprint(trade_service: TradeService):
+def create_trade_blueprint(trade_service: TradeService, ai_service: AIService):
     api = Blueprint('api', __name__)
 
     @api.route('/trades', methods=['GET'])
@@ -24,5 +25,19 @@ def create_trade_blueprint(trade_service: TradeService):
     def clear_trades():
         trade_service.clear_all_trades()
         return jsonify({'cleared': True})
+
+    # --- AI ENDPOINTS ---
+
+    @api.route('/ai/analyze', methods=['POST'])
+    def analyze_performance():
+        trades = trade_service.get_all_trades()
+        analysis = ai_service.analyze_performance(trades)
+        return jsonify({'analysis': analysis})
+
+    @api.route('/ai/check', methods=['POST'])
+    def pre_trade_check():
+        data = request.json
+        analysis = ai_service.pre_trade_check(data)
+        return jsonify({'analysis': analysis})
 
     return api

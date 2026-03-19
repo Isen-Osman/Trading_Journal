@@ -8,6 +8,7 @@ from flask import Flask, send_from_directory
 from src.infrastructure.database import init_db
 from src.infrastructure.persistence.sqlite_repository import SQLiteTradeRepository
 from src.application.services import TradeService
+from src.application.ai_service import AIService
 from src.api.routes import create_trade_blueprint
 import os
 
@@ -20,12 +21,13 @@ repository = SQLiteTradeRepository(DB_PATH)
 
 # 2. Initialize Application Layer
 trade_service = TradeService(repository)
+ai_service = AIService()
 
 # 3. Setup Flask API Layer
 app = Flask(__name__, static_folder=STATIC_FOLDER)
 
 # Register API routes
-api_blueprint = create_trade_blueprint(trade_service)
+api_blueprint = create_trade_blueprint(trade_service, ai_service)
 app.register_blueprint(api_blueprint, url_prefix='/api')
 
 # Serve Frontend
