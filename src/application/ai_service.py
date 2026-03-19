@@ -75,3 +75,32 @@ class AIService:
         except Exception as e:
             print(f"❌ AI Error: {e}")
             return "Грешка при проверка на трејдот."
+
+    def analyze_chart(self, image_data: bytes, mime_type: str) -> str:
+        """Анализа на скриншот од графикон со помош на Vision."""
+        prompt = """
+        Ти си професионален 'Sniper Trader' за злато (XAU/USD). Твојата работа е да ги филтрираш лошите трејдови.
+        
+        Анализирај го графиконот и дај ми го следниов ИЗВЕШТАЈ НА МАКЕДОНСКИ:
+
+        1. 🚦 **ОДЛУКА:** [КУПУВАЈ 🟢 / ПРОДАВАЈ 🔴 / ЧЕКАЈ ⚪]
+        2. 📊 **СИГУРНОСТ:** [0-100%] (Биди строг! Само најдобрите сетапи добиваат над 80%)
+        3. 🧱 **КЛУЧНИ ЗОНИ:** (Каде е ликвидноста? Каде е Order Block?)
+        4. 🎯 **ТВОЈОТ ПЛАН:**
+           - Влез (Entry): [Цена]
+           - Стоп Лос (SL): [Цена]
+           - Таргет (TP): [Цена]
+           - Ризик (R:R): [на пр. 1:3]
+
+        Ако сетапот не е чист, напиши "ОДЛУКА: ЧЕКАЈ" и објасни зошто.
+        """
+        
+        try:
+            response = self.model_flash.generate_content([
+                prompt,
+                {'mime_type': mime_type, 'data': image_data}
+            ])
+            return response.text
+        except Exception as e:
+            print(f"❌ Vision Error: {e}")
+            return f"Грешка при анализа на сликата: {str(e)}"

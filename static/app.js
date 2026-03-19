@@ -42,22 +42,51 @@ function setEmotion(emo) {
 
 // ─── R:R CALCULATOR ──────────────────────────────────
 function calcRR() {
+  const pair    = document.getElementById('tradePair').value;
   const entry   = parseFloat(document.getElementById('entryPrice').value);
   const sl      = parseFloat(document.getElementById('stopLoss').value);
   const tp      = parseFloat(document.getElementById('takeProfit').value);
   const display = document.getElementById('rrDisplay');
+  const lotInput = document.getElementById('lotSize');
 
-  if (entry && sl && tp) {
-    const risk   = Math.abs(entry - sl);
-    const reward = Math.abs(tp - entry);
-    if (risk > 0) {
-      const rr    = (reward / risk).toFixed(2);
-      const color = rr >= 2 ? '#22c55e' : rr >= 1 ? '#f0b429' : '#ef4444';
-      const icon  = rr >= 2 ? '✅' : rr >= 1 ? '⚠️' : '❌';
-      display.innerHTML = `R:R = <span class="rr-val" style="color:${color}">1 : ${rr}</span> ${icon}`;
+  if (entry && sl) {
+    const riskAmount = 2.00; // 1% од $200
+    const distance   = Math.abs(entry - sl);
+    
+    let recommendedLot = 0;
+
+    // Универзална Логика за Лот во зависност од парот
+    if (pair.includes('XAU')) {
+      // GOLD: $1 поместување на 1.00 лот = $100
+      recommendedLot = (riskAmount / (distance * 100)).toFixed(2);
+    } else if (pair.includes('JPY')) {
+      // JPY PAIRS: 0.01 поместување на 1.00 лот = ~$7-10 (претпоставуваме $10 за сигурност)
+      recommendedLot = (riskAmount / (distance * 100)).toFixed(2);
+    } else if (pair.includes('BTC')) {
+      // BTC: $1 поместување на 1.00 лот = $1
+      recommendedLot = (riskAmount / distance).toFixed(3);
+    } else {
+      // FOREX (EUR/USD, GBP/USD...): 0.0001 поместување на 1.00 лот = $10
+      // Дистанца во пипсови = distance / 0.0001
+      recommendedLot = (riskAmount / (distance * 100000 / 10)).toFixed(2);
+    }
+    
+    if (distance > 0) {
+      // Автоматски пополни го лотот како предлог
+      if (!lotInput.value) lotInput.placeholder = recommendedLot;
+      
+      // Пресметка на R:R ако има TP
+      if (tp) {
+        const reward = Math.abs(tp - entry);
+        const rr     = (reward / distance).toFixed(2);
+        const color  = rr >= 2 ? '#22c55e' : rr >= 1 ? '#f0b429' : '#ef4444';
+        display.innerHTML = `R:R = <span class="rr-val" style="color:${color}">1 : ${rr}</span> | Лот за ${pair}: <strong style="color:var(--gold)">${recommendedLot}</strong>`;
+      } else {
+        display.innerHTML = `Препорачан Лот за ${pair} ($2 ризик): <strong style="color:var(--gold)">${recommendedLot}</strong>`;
+      }
     }
   } else {
-    display.innerHTML = 'Enter Entry, SL & TP to calculate';
+    display.innerHTML = 'Внеси Entry и SL за калкулација';
   }
 }
 
@@ -330,6 +359,74 @@ async function analyzeTrades() {
     btn.disabled = false;
     btnIcon.textContent = '✨';
     btnIcon.classList.remove('loading');
+  }
+}
+
+// ─── AI CHART VISION ──────────────────────────────────
+function previewImage(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const preview = document.getElementById('uploadPreview');
+      preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+async function analyzeChart() {
+  const fileInput = document.getElementById('chartUpload');
+  const btn = document.getElementById('aiVisionBtn');
+  const responseDiv = document.getElementById('aiVisionResponse');
+  const btnIcon = btn.querySelector('.btn-icon');
+  const section = document.querySelector('.ai-vision-section');
+
+  if (!fileInput.files[0]) {
+    showToast('⚠️ Прво прикачи скриншот од TradingView!');
+    return;
+  }
+
+  // Loading state
+  btn.disabled = true;
+  btnIcon.textContent = '⏳';
+  btnIcon.classList.add('loading');
+  section.classList.add('analyzing'); // Стартувај пулсирање
+  responseDiv.style.display = 'block';
+  responseDiv.innerHTML = '<p style="color:var(--text-dim)">AI ги скенира вашите зони за тргување... 👁️</p>';
+
+  const formData = new FormData();
+  formData.append('file', fileInput.files[0]);
+
+  try {
+    const res = await fetch('/api/ai/chart-analysis', {
+      method: 'POST',
+      body: formData
+    });
+    const data = await res.json();
+
+    if (data.analysis) {
+      let html = data.analysis
+        .replace(/\n\n/g, '</p><p>')
+        .replace(/\n/g, '<br>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/^\* (.*)/gm, '<li>$1</li>');
+      
+      if (html.includes('<li>')) {
+        html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+      }
+      responseDiv.innerHTML = `<p>${html}</p>`;
+    } else {
+      responseDiv.innerHTML = '<p>Неуспешна анализа. Обидете се со друга слика.</p>';
+    }
+  } catch (e) {
+    showToast('⚠️ Грешка при визуелната анализа.');
+    responseDiv.innerHTML = '<p style="color:var(--red)">Грешка при поврзување со Vision сервисот.</p>';
+  } finally {
+    btn.disabled = false;
+    btnIcon.textContent = '👁️';
+    btnIcon.classList.remove('loading');
+    section.classList.remove('analyzing'); // Стопирај пулсирање
   }
 }
 

@@ -40,4 +40,19 @@ def create_trade_blueprint(trade_service: TradeService, ai_service: AIService):
         analysis = ai_service.pre_trade_check(data)
         return jsonify({'analysis': analysis})
 
+    @api.route('/ai/chart-analysis', methods=['POST'])
+    def chart_analysis():
+        if 'file' not in request.files:
+            return jsonify({'error': 'No file part'}), 400
+        
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({'error': 'No selected file'}), 400
+            
+        if file:
+            image_data = file.read()
+            mime_type = file.mimetype
+            analysis = ai_service.analyze_chart(image_data, mime_type)
+            return jsonify({'analysis': analysis})
+
     return api
