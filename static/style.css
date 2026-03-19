@@ -326,6 +326,14 @@ textarea {
 .rule-text       { color: var(--text-dim); }
 .rule-text strong { color: var(--text); }
 
+/* Chart */
+.chart-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 24px 24px 10px;
+}
+
 /* Trades table */
 .trades-section {
   background: var(--surface);
