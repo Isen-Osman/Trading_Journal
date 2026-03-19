@@ -168,6 +168,14 @@
         </div>
       </div>
 
+      <!-- Profit Chart -->
+      <div class="chart-section" style="margin-top: 20px;">
+        <div class="section-title">// Profit Curve (Cumulative P&L)</div>
+        <div class="chart-container" style="position: relative; height:250px; width:100%; padding: 0 20px 20px;">
+          <canvas id="profitChart"></canvas>
+        </div>
+      </div>
+
       <!-- Trades Table -->
       <div class="trades-section" style="margin-top: 20px;">
         <div class="trades-header">
@@ -274,6 +282,7 @@
 
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

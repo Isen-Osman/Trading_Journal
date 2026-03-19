@@ -3,6 +3,7 @@ const API = '/api/trades';
 
 let selectedDirection = '';
 let selectedEmotion   = '';
+let profitChart       = null;
 
 // Set current date/time on load
 const now = new Date();
@@ -19,6 +20,7 @@ async function loadTrades() {
     const trades = await res.json();
     renderTrades(trades);
     updateStats(trades);
+    updateChart(trades);
   } catch (e) {
     showToast('⚠️ Cannot connect to server. Is server.py running?');
   }
@@ -197,6 +199,73 @@ function updateStats(trades) {
     }, 0) / rrTrades.length;
     document.getElementById('statRR').textContent = '1:' + avgRR.toFixed(1);
   }
+}
+
+// ─── UPDATE CHART ────────────────────────────────────
+function updateChart(trades) {
+  if (!trades || trades.length === 0) {
+    if (profitChart) {
+      profitChart.destroy();
+      profitChart = null;
+    }
+    return;
+  }
+
+  // Sort trades by date & time
+  const sorted = [...trades].sort((a, b) => {
+    return (a.date + a.time).localeCompare(b.date + b.time);
+  });
+
+  let cumulative = 0;
+  const data = sorted.map(t => {
+    cumulative += (parseFloat(t.pnl) || 0);
+    return cumulative;
+  });
+
+  const labels = sorted.map((t, idx) => `Trade #${idx + 1}`);
+
+  const canvas = document.getElementById('profitChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  if (profitChart) {
+    profitChart.destroy();
+  }
+
+  profitChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Cumulative Profit ($)',
+        data: data,
+        borderColor: '#7c6fff',
+        backgroundColor: 'rgba(124, 111, 255, 0.1)',
+        borderWidth: 2,
+        fill: true,
+        tension: 0.3,
+        pointBackgroundColor: '#7c6fff',
+        pointRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          grid: { color: 'rgba(255,255,255,0.05)' },
+          ticks: { color: '#7070a0', font: { family: 'Space Mono' } }
+        },
+        x: {
+          grid: { display: false },
+          ticks: { color: '#7070a0', font: { family: 'Space Mono' } }
+        }
+      },
+      plugins: {
+        legend: { display: false }
+      }
+    }
+  });
 }
 
 // ─── RESET FORM ──────────────────────────────────────
