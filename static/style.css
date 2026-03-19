@@ -455,6 +455,90 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 
 .toast.show { transform: translateY(0); opacity: 1; }
 
+/* AI Styles */
+.ai-card {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 20px rgba(124,111,255,0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.ai-card .section-title {
+  color: var(--accent);
+}
+
+.ai-description {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+.ai-btn {
+  width: 100%;
+  padding: 10px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.ai-btn:hover {
+  background: #8b80ff;
+  transform: translateY(-1px);
+}
+
+.ai-btn:disabled {
+  background: var(--surface2);
+  color: var(--text-dim);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.ai-response-container {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text);
+  max-height: 400px;
+  overflow-y: auto;
+  display: none;
+}
+
+.ai-response-container p {
+  margin-bottom: 10px;
+}
+
+.ai-response-container strong {
+  color: var(--accent);
+}
+
+.ai-response-container ul {
+  padding-left: 16px;
+  margin-bottom: 10px;
+}
+
+/* Spinner */
+.btn-icon.loading {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 @media (max-width: 768px) {
   .main-grid   { grid-template-columns: 1fr; }
   .stats-bar   { grid-template-columns: repeat(2, 1fr); }

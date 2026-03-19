@@ -289,5 +289,49 @@ function showToast(msg) {
   setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
+// ─── AI ANALYSIS ──────────────────────────────────────
+async function analyzeTrades() {
+  const btn = document.getElementById('aiAnalyzeBtn');
+  const responseDiv = document.getElementById('aiResponse');
+  const btnIcon = btn.querySelector('.btn-icon');
+
+  // Loading state
+  btn.disabled = true;
+  btnIcon.textContent = '⏳';
+  btnIcon.classList.add('loading');
+  responseDiv.style.display = 'block';
+  responseDiv.innerHTML = '<p style="color:var(--text-dim)">Вашите шеми на тргување се анализираат... 🧠</p>';
+
+  try {
+    const res = await fetch('/api/ai/analyze', { method: 'POST' });
+    const data = await res.json();
+
+    if (data.analysis) {
+      // Simple markdown-ish to HTML conversion
+      let html = data.analysis
+        .replace(/\n\n/g, '</p><p>')
+        .replace(/\n/g, '<br>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/^\* (.*)/gm, '<li>$1</li>');
+
+      if (html.includes('<li>')) {
+        html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+      }
+
+      responseDiv.innerHTML = `<p>${html}</p>`;
+    } else {
+      responseDiv.innerHTML = '<p>АИ не можеше да генерира анализа. Обидете се да додадете повеќе трејдови.</p>';
+    }
+  } catch (e) {
+    showToast('⚠️ Грешка во АИ сервисот.');
+    responseDiv.innerHTML = '<p style="color:var(--red)">Грешка при поврзување со АИ сервисот.</p>';
+  } finally {
+
+    btn.disabled = false;
+    btnIcon.textContent = '✨';
+    btnIcon.classList.remove('loading');
+  }
+}
+
 // ─── INIT ────────────────────────────────────────────
 loadTrades();
