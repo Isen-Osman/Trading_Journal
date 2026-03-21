@@ -1,0 +1,85 @@
+<div id="vault-tab" class="tab-content">
+  <div class="vault-header">
+    <div class="section-title" style="font-size: 24px;">// The Master's Vault</div>
+    <p class="vault-subtitle">Study your winning setups. Train your brain for precision.</p>
+  </div>
+
+  <div id="vaultGrid" class="vault-grid">
+    <!-- Winning setup images will appear here -->
+    <div class="empty-state">No winning setups logged with images yet. 🏦</div>
+  </div>
+</div>
+
+<style>
+.vault-header {
+  margin-bottom: 30px;
+  text-align: center;
+}
+.vault-subtitle {
+  color: var(--text-dim);
+  font-family: 'Space Mono';
+  font-size: 14px;
+}
+
+.vault-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+}
+
+.vault-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+  cursor: pointer;
+}
+
+.vault-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--gold);
+  box-shadow: 0 10px 30px rgba(240, 180, 41, 0.1);
+}
+
+.vault-image-container {
+  height: 200px;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.vault-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.vault-info {
+  padding: 15px;
+  border-top: 1px solid var(--border);
+}
+
+.vault-meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-family: 'Space Mono';
+  font-size: 11px;
+}
+
+.vault-pair { font-weight: 800; color: var(--gold); font-size: 16px; }
+.vault-pnl { font-weight: 800; color: var(--green); }
+
+.vault-strategy {
+  font-size: 12px;
+  color: var(--text-dim);
+  background: var(--surface2);
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+</style>
