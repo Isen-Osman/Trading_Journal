@@ -3,89 +3,116 @@
     <!-- Form -->
     <div>
       <div class="form-section">
-        <div class="section-title">// Нов Влез во Трејд</div>
+        <div class="section-title">// New Trade Entry</div>
         <div class="form-grid">
           <div class="form-group">
-            <label>Датум</label>
+            <label>Date</label>
             <input type="date" id="tradeDate">
           </div>
           <div class="form-group">
-            <label>Време</label>
+            <label>Time</label>
             <input type="time" id="tradeTime">
           </div>
           <div class="form-group">
-            <label>Пар</label>
+            <label>Pair</label>
             <select id="tradePair" onchange="calcRR()">
-              <option value="XAU/USD">XAU/USD (Злато)</option>
-              <option value="EUR/USD">EUR/USD</option>
-              <option value="GBP/USD">GBP/USD</option>
-              <option value="BTC/USD">BTC/USD</option>
-              <option value="Other">Друго</option>
+              <optgroup label="Majors">
+                <option value="XAU/USD">XAU/USD (Gold)</option>
+                <option value="EUR/USD">EUR/USD</option>
+                <option value="GBP/USD">GBP/USD</option>
+                <option value="USD/JPY">USD/JPY</option>
+                <option value="AUD/USD">AUD/USD</option>
+                <option value="USD/CHF">USD/CHF</option>
+                <option value="USD/CAD">USD/CAD</option>
+                <option value="NZD/USD">NZD/USD</option>
+              </optgroup>
+              <optgroup label="Minors">
+                <option value="EUR/GBP">EUR/GBP</option>
+                <option value="EUR/JPY">EUR/JPY</option>
+                <option value="GBP/JPY">GBP/JPY</option>
+                <option value="EUR/AUD">EUR/AUD</option>
+                <option value="EUR/CHF">EUR/CHF</option>
+                <option value="EUR/CAD">EUR/CAD</option>
+                <option value="EUR/NZD">EUR/NZD</option>
+                <option value="GBP/AUD">GBP/AUD</option>
+                <option value="GBP/CHF">GBP/CHF</option>
+                <option value="GBP/CAD">GBP/CAD</option>
+                <option value="AUD/JPY">AUD/JPY</option>
+                <option value="CAD/JPY">CAD/JPY</option>
+                <option value="CHF/JPY">CHF/JPY</option>
+                <option value="NZD/JPY">NZD/JPY</option>
+              </optgroup>
+              <optgroup label="Others">
+                <option value="BTC/USD">BTC/USD (Bitcoin)</option>
+                <option value="Other">Other</option>
+              </optgroup>
             </select>
           </div>
           <div class="form-group">
-            <label>Сесија</label>
+            <label>Session</label>
             <select id="tradeSession">
-              <option value="London (08-11)">London 08:00–11:00</option>
-              <option value="NY (17-20)">New York 17:00–20:00</option>
-              <option value="Other">Друго</option>
+              <option value="Asian">Asian (Tokyo)</option>
+              <option value="London">London</option>
+              <option value="New York">New York</option>
+              <option value="London/NY">London/NY Overlap</option>
+              <option value="Other">Other</option>
             </select>
           </div>
           <div class="form-group full">
-            <label>Насока</label>
+            <label>Direction</label>
             <div class="direction-group">
               <button class="dir-btn buy"  onclick="setDirection('buy')">▲ BUY</button>
               <button class="dir-btn sell" onclick="setDirection('sell')">▼ SELL</button>
             </div>
           </div>
           <div class="form-group">
-            <label>Влезна Цена</label>
-            <input type="number" id="entryPrice" placeholder="2315.50" step="0.01" oninput="calcRR()">
+            <label>Entry Price</label>
+            <input type="number" id="entryPrice" placeholder="2315.50" step="0.00001" oninput="calcRR()">
           </div>
           <div class="form-group">
-            <label>Лот (Lot Size)</label>
-            <input type="number" id="lotSize" placeholder="0.01" step="0.001">
+            <label>Lot Size</label>
+            <input type="number" id="lotSize" placeholder="0.01" step="0.01">
           </div>
           <div class="form-group">
             <label>Stop Loss</label>
-            <input type="number" id="stopLoss" placeholder="2312.00" step="0.01" oninput="calcRR()">
+            <input type="number" id="stopLoss" placeholder="2312.00" step="0.00001" oninput="calcRR()">
           </div>
           <div class="form-group">
             <label>Take Profit</label>
-            <input type="number" id="takeProfit" placeholder="2322.00" step="0.01" oninput="calcRR()">
+            <input type="number" id="takeProfit" placeholder="2322.00" step="0.00001" oninput="calcRR()">
           </div>
           <div class="form-group full">
-            <label>Калкулација на Ризик</label>
-            <div class="rr-display" id="rrDisplay">Внесете Цена и SL за пресметка</div>
+            <label>Risk Calculation</label>
+            <div class="rr-display" id="rrDisplay">Enter Entry & SL for calculation</div>
           </div>
           <div class="form-group">
-            <label>Излезна Цена</label>
-            <input type="number" id="exitPrice" placeholder="2320.00" step="0.01">
+            <label>Exit Price</label>
+            <input type="number" id="exitPrice" placeholder="2320.00" step="0.00001">
           </div>
           <div class="form-group">
-            <label>П&Л ($)</label>
+            <label>P&L ($)</label>
             <input type="number" id="pnlAmount" placeholder="+4.20" step="0.01">
           </div>
           <div class="form-group">
-            <label>Резултат</label>
+            <label>Result</label>
             <select id="tradeResult">
-              <option value="WIN">✅ ДОБИВКА</option>
-              <option value="LOSS">❌ ЗАГУБА</option>
+              <option value="WIN">✅ WIN</option>
+              <option value="LOSS">❌ LOSS</option>
               <option value="BE">➖ BREAKEVEN</option>
             </select>
           </div>
           <div class="form-group">
-            <label>Стратегија</label>
+            <label>Strategy</label>
             <select id="tradeStrategy">
               <option value="S/R Bounce">S/R Bounce</option>
               <option value="SMC">SMC</option>
               <option value="Breakout">Breakout</option>
               <option value="Trend Follow">Trend Follow</option>
-              <option value="Other">Друго</option>
+              <option value="Other">Other</option>
             </select>
           </div>
           <div class="form-group full">
-            <label>Емоција пред влез</label>
+            <label>Emotion Before Entry</label>
             <div class="emotion-group" id="emotionGroup">
               <button class="emo-btn" onclick="setEmotion('Calm')">😌 Calm</button>
               <button class="emo-btn" onclick="setEmotion('FOMO')">😰 FOMO</button>
@@ -95,52 +122,51 @@
             </div>
           </div>
           <div class="form-group full">
-            <button class="submit-btn" onclick="addTrade()">+ ЗАЧУВАЈ ТРЕЈД</button>
+            <button class="submit-btn" onclick="addTrade()">+ LOG TRADE</button>
           </div>
         </div>
       </div>
 
-      <!-- Историја Табела -->
+      <!-- History Table -->
       <div class="trades-section" style="margin-top: 20px;">
         <div class="trades-header">
-          <div class="section-title" style="margin-bottom:0">// Историја</div>
-          <button class="clear-btn" onclick="clearAll()">Избриши Сè</button>
+          <div class="section-title" style="margin-bottom:0">// History</div>
+          <button class="clear-btn" onclick="clearAll()">Clear All</button>
         </div>
         <div class="trades-table">
           <table>
             <thead>
               <tr>
-                <th>Датум</th>
-                <th>Пар</th>
-                <th>Дир.</th>
-                <th>Влез</th>
-                <th>SL</th>
-                <th>TP</th>
+                <th>Date</th>
+                <th>Pair</th>
+                <th>Dir.</th>
+                <th>Entry</th>
+                <th>SL / TP</th>
                 <th>R:R</th>
-                <th>Резултат</th>
-                <th>П&Л</th>
+                <th>Result</th>
+                <th>P&L</th>
                 <th></th>
               </tr>
             </thead>
             <tbody id="tradesBody"></tbody>
           </table>
-          <div class="empty-state" id="emptyState">📈 Нема внесени трејдови.</div>
+          <div class="empty-state" id="emptyState">📈 No trades logged yet.</div>
         </div>
       </div>
     </div>
 
-    <!-- Sidebar Правила -->
+    <!-- Sidebar Rules -->
     <div class="sidebar">
       <div class="rules-card">
-        <div class="section-title">// ПРАВИЛА</div>
-        <div class="rule-item"><span class="rule-num">01</span><span class="rule-text"><strong>Макс 1% ризик</strong> по трејд.</span></div>
-        <div class="rule-item"><span class="rule-num">02</span><span class="rule-text"><strong>Никогаш без SL.</strong> Без исклучоци.</span></div>
-        <div class="rule-item"><span class="rule-num">03</span><span class="rule-text"><strong>Мин R:R 1:2.</strong> Ако не е, прескокни.</span></div>
+        <div class="section-title">// RULES</div>
+        <div class="rule-item"><span class="rule-num">01</span><span class="rule-text"><strong>Max 1% risk</strong> per trade.</span></div>
+        <div class="rule-item"><span class="rule-num">02</span><span class="rule-text"><strong>Never without SL.</strong> No exceptions.</span></div>
+        <div class="rule-item"><span class="rule-num">03</span><span class="rule-text"><strong>Min R:R 1:2.</strong> If not, skip it.</span></div>
       </div>
       <div class="rules-card">
-        <div class="section-title">// ПСИХОЛОШКИ ТЕСТ</div>
-        <div class="rule-item"><span class="rule-num">✓</span><span class="rule-text">Дали сум смирен пред овој трејд?</span></div>
-        <div class="rule-item"><span class="rule-num">✓</span><span class="rule-text">Дали влегувам со план или FOMO?</span></div>
+        <div class="section-title">// PSYCHOLOGY TEST</div>
+        <div class="rule-item"><span class="rule-num">✓</span><span class="rule-text">Am I calm before this trade?</span></div>
+        <div class="rule-item"><span class="rule-num">✓</span><span class="rule-text">Is this a plan or FOMO?</span></div>
       </div>
     </div>
   </div>

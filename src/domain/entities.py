@@ -21,6 +21,7 @@ class Trade:
     notes: str = ""
     lot: Optional[float] = None
     rr: str = "-"
+    image: Optional[str] = None # Base64 string of the chart
     id: Optional[int] = None
     created: Optional[str] = None
 
