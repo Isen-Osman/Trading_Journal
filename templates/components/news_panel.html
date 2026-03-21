@@ -1,0 +1,86 @@
+<div id="news-tab" class="tab-content">
+  <div class="main-grid">
+    <div>
+      <div class="form-section" style="border-color: #f97316;">
+        <div class="section-title" style="color: #f97316; display: flex; justify-content: space-between; align-items: center;">
+          <span>// Економски Календар</span>
+          <div class="news-modes">
+            <button class="mode-btn active" onclick="toggleNewsMode('live')">📡 ВО ЖИВО</button>
+            <button class="mode-btn" onclick="toggleNewsMode('weekly')">📅 НЕДЕЛНО</button>
+          </div>
+        </div>
+
+        <!-- Live News View -->
+        <div id="liveNewsView">
+          <div id="newsList" class="news-list">
+            <div class="empty-state">Чекање на нови економски податоци... 📡</div>
+          </div>
+        </div>
+
+        <!-- Weekly News View -->
+        <div id="weeklyNewsView" style="display: none;">
+          <div class="day-selector">
+            <button class="day-btn active" onclick="filterWeeklyDay('Monday')">ПОН</button>
+            <button class="day-btn" onclick="filterWeeklyDay('Tuesday')">ВТО</button>
+            <button class="day-btn" onclick="filterWeeklyDay('Wednesday')">СРЕ</button>
+            <button class="day-btn" onclick="filterWeeklyDay('Thursday')">ЧЕТ</button>
+            <button class="day-btn" onclick="filterWeeklyDay('Friday')">ПЕТ</button>
+          </div>
+          <div id="weeklyNewsList" class="news-list" style="margin-top: 20px;">
+            <!-- Неделните вести ќе се појават тука -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="rules-card" style="border-color: #f97316;">
+        <div class="section-title" style="color: #f97316;">// Паника Сигнал</div>
+        <div id="panicBox" class="panic-box">Системот е мирен. ✅</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.news-modes { display: flex; gap: 10px; }
+.mode-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-family: 'Space Mono';
+  cursor: pointer;
+}
+.mode-btn.active { border-color: #f97316; color: #f97316; background: rgba(249, 115, 22, 0.1); }
+
+.day-selector { display: flex; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 15px; }
+.day-btn {
+  flex: 1;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 8px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.day-btn.active { background: #f97316; color: #000; border-color: #f97316; }
+
+.weekly-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: var(--surface2);
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+.impact-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+.impact-High { background: var(--red); box-shadow: 0 0 8px var(--red); }
+.impact-Medium { background: #f97316; }
+</style>

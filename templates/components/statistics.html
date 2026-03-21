@@ -1,15 +1,93 @@
 <div id="stats-tab" class="tab-content">
+  <!-- Top KPI Cards -->
   <div class="stats-bar" id="statsBar" style="padding-top: 0;">
-    <div class="stat-card gold"><div class="stat-label">Вкупно Трејдови</div><div class="stat-value neutral" id="statTotal">0</div></div>
-    <div class="stat-card green"><div class="stat-label">Win Rate</div><div class="stat-value positive" id="statWinRate">0%</div></div>
-    <div class="stat-card red"><div class="stat-label">Вкупен П&Л</div><div class="stat-value" id="statPnL">$0.00</div></div>
-    <div class="stat-card purple"><div class="stat-label">Просечен R:R</div><div class="stat-value neutral" id="statRR">0:0</div></div>
+    <div class="stat-card gold">
+      <div class="stat-label">Total Trades</div>
+      <div class="stat-value neutral" id="statTotal">0</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-label">Win Rate</div>
+      <div class="stat-value positive" id="statWinRate">0%</div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-label">Net P&L</div>
+      <div class="stat-value" id="statPnL">$0.00</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="stat-label">Profit Factor</div>
+      <div class="stat-value neutral" id="statPF">0.00</div>
+    </div>
   </div>
   
+  <!-- Main Profit Curve -->
   <div class="chart-section" style="margin-top: 20px;">
-    <div class="section-title">// Профитна Крива (Cumulative P&L)</div>
-    <div class="chart-container" style="position: relative; height:450px; width:100%; padding: 0 20px 20px;">
+    <div class="section-title">// Equity Curve (Cumulative P&L)</div>
+    <div class="chart-container main-chart">
       <canvas id="profitChart"></canvas>
     </div>
   </div>
+
+  <!-- Advanced Analytics Grid -->
+  <div class="analytics-grid">
+    <!-- Pair Performance -->
+    <div class="chart-card">
+      <div class="section-title">// Best Pairs</div>
+      <div class="chart-container sm-chart">
+        <canvas id="pairChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Emotion Analysis -->
+    <div class="chart-card">
+      <div class="section-title">// Psychology (Wins vs Losses)</div>
+      <div class="chart-container sm-chart">
+        <canvas id="emotionChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Session Performance -->
+    <div class="chart-card">
+      <div class="section-title">// Session Efficiency</div>
+      <div class="chart-container sm-chart">
+        <canvas id="sessionChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Direction Bias -->
+    <div class="chart-card">
+      <div class="section-title">// Buy vs Sell Bias</div>
+      <div class="chart-container sm-chart">
+        <canvas id="directionChart"></canvas>
+      </div>
+    </div>
+  </div>
 </div>
+
+<style>
+.main-chart { height: 350px; width: 100%; }
+.sm-chart { height: 220px; width: 100%; }
+
+.analytics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.chart-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  transition: transform 0.3s ease;
+}
+
+.chart-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--gold);
+}
+
+@media (max-width: 768px) {
+  .analytics-grid { grid-template-columns: 1fr; }
+}
+</style>
