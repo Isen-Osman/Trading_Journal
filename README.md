@@ -1,4 +1,4 @@
-# 📊 ISEN Trading Journal — Pro Edition
+# 📊 OSMAN Trading Journal — Pro Edition
 
 A professional trading journal built with **Onion Architecture** (Python/Flask backend) and **SQLite** persistence. Designed for XAU/USD scalping with built-in **Gemini AI** analysis.
 
