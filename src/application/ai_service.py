@@ -104,3 +104,51 @@ class AIService:
         except Exception as e:
             print(f"❌ Vision Error: {e}")
             return f"Грешка при анализа на сликата: {str(e)}"
+
+    def extract_trade_data(self, image_data: bytes, mime_type: str) -> Dict:
+        """Extract trade coordinates (Entry, SL, TP, Lot, PnL, etc.) from a screenshot."""
+        prompt = """
+        Analyze this trading app screenshot (MetaTrader format) and extract the following trade details:
+        1. Pair: The symbol (e.g., USDJPY.pro). Clean it (e.g., 'USD/JPY').
+        2. Direction: 'BUY' or 'SELL'.
+        3. Lot Size: The number next to the direction (e.g., 'sell 0.01' -> 0.01).
+        4. Entry Price: The first price in the sequence (e.g., 159.672 -> 159.661).
+        5. Exit Price: The second price in the sequence (after the arrow).
+        6. Stop Loss (SL): Clearly labeled 'S/L:'.
+        7. Take Profit (TP): Clearly labeled 'T/P:'.
+        8. P&L: The large profit/loss number on the right (e.g., 0.07).
+        9. Date: The date in YYYY-MM-DD format.
+        10. Time: The entry time in HH:mm format.
+
+        Return the data ONLY in the following JSON format:
+        {
+            "pair": "USD/JPY",
+            "direction": "SELL",
+            "lot": 0.01,
+            "entry": 159.672,
+            "sl": 159.771,
+            "tp": 159.356,
+            "exit": 159.661,
+            "pnl": 0.07,
+            "date": "2026-03-26",
+            "time": "23:31"
+        }
+        If any value is not clear, use null.
+        """
+        
+        try:
+            response = self.model_flash.generate_content([
+                prompt,
+                {'mime_type': mime_type, 'data': image_data}
+            ])
+            # Extract JSON from response
+            text = response.text
+            import json
+            import re
+            json_match = re.search(r'\{.*\}', text, re.DOTALL)
+            if json_match:
+                return json.loads(json_match.group())
+            return {}
+        except Exception as e:
+            print(f"❌ Extraction Error: {e}")
+            return {}
