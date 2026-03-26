@@ -405,6 +405,57 @@ td { padding: 14px 12px; border-bottom: 1px solid var(--border); }
   font-family: 'Space Mono', monospace;
 }
 
+/* MODAL STYLES */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0; top: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(8px);
+  align-items: center;
+  justify-content: center;
+}
+.modal.show { display: flex; }
+.modal-content {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  width: 90%; max-width: 500px;
+  padding: 30px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  animation: modalIn 0.3s ease-out;
+}
+@keyframes modalIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.modal-title { font-size: 18px; font-weight: 800; color: var(--gold); }
+.modal-close { cursor: pointer; color: var(--text-dim); font-size: 24px; transition: color 0.2s; }
+.modal-close:hover { color: var(--red); }
+.modal-body { margin-bottom: 24px; }
+.modal-footer { display: flex; gap: 12px; }
+.confirm-btn { flex: 2; padding: 14px; background: var(--gold); color: #000; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; }
+.cancel-btn { flex: 1; padding: 14px; background: var(--surface2); color: var(--text); border: 1px solid var(--border); border-radius: 12px; font-weight: 700; cursor: pointer; }
+
+/* EXTRACTION PREVIEW */
+.extract-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 10px; }
+.extract-item { display: flex; flex-direction: column; gap: 4px; }
+.extract-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; font-family: 'Space Mono', monospace; }
+.extract-value { font-size: 16px; font-weight: 700; color: var(--text); font-family: 'Space Mono', monospace; background: var(--surface2); padding: 10px; border-radius: 8px; border: 1px solid var(--border); }
+
+.upload-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--gold);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 10px;
+  font-family: 'Space Mono', monospace;
+  cursor: pointer;
+  margin-left: 10px;
+  transition: all 0.2s;
+}
+.upload-btn:hover { border-color: var(--gold); background: rgba(240,180,41,0.1); }
+
 /* RESPONSIVE */
 @media (max-width: 1024px) {
   .main-grid { grid-template-columns: 1fr; }

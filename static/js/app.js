@@ -197,7 +197,12 @@ async function addTrade() {
     pnl:   parseFloat(pnl)  || null,
     result, strategy,
     emotion: selectedEmotion || 'N/A',
-    lot: parseFloat(document.getElementById('lotSize').value) || null
+    lot: parseFloat(document.getElementById('lotSize').value) || null,
+    rr: document.getElementById('rrDisplay').textContent.includes('R:R =') ? 
+        document.getElementById('rrDisplay').textContent.split('|')[0].trim() : '-',
+    reason: "",
+    notes: "",
+    image: null
   };
 
   try {
@@ -210,9 +215,13 @@ async function addTrade() {
       showToast('✅ Trade saved!');
       resetForm();
       loadTrades();
+    } else {
+      const err = await res.json();
+      alert('❌ Failed to save trade: ' + (err.error || 'Unknown error'));
     }
   } catch (e) {
-    showToast('⚠️ Error saving trade.');
+    console.error('Error saving trade:', e);
+    alert('⚠️ Connection error while saving trade.');
   }
 }
 
@@ -668,6 +677,131 @@ function filterWeeklyDay(day) {
       <div style="font-family:'Roboto Mono'; font-size:12px; color:var(--gold);">${item.time}</div>
     </div>
   `).join('');
+}
+
+// ─── TRADE EXTRACTION ───────────────────────────────
+let currentExtractedData = null;
+
+async function extractTrade(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  showToast('🔍 Analyzing screenshot...');
+  
+  const formData = new FormData();
+  formData.append('file', file);
+
+  try {
+    const res = await fetch('/api/ai/extract-trade', {
+      method: 'POST',
+      body: formData
+    });
+    
+    if (!res.ok) throw new Error('Extraction failed');
+    
+    const data = await res.json();
+    currentExtractedData = data;
+    
+    showExtractionModal(data);
+  } catch (e) {
+    console.error(e);
+    showToast('❌ Error extracting data');
+  } finally {
+    // Reset file input
+    event.target.value = '';
+  }
+}
+
+function showExtractionModal(data) {
+  const preview = document.getElementById('extractPreview');
+  if (!preview) return;
+
+  preview.innerHTML = `
+    <div class="extract-item">
+      <span class="extract-label">Pair</span>
+      <div class="extract-value">${data.pair || '???'}</div>
+    </div>
+    <div class="extract-item">
+      <span class="extract-label">Direction</span>
+      <div class="extract-value" style="color:${data.direction === 'BUY' ? 'var(--green)' : 'var(--red)'}">${data.direction || '???'}</div>
+    </div>
+    <div class="extract-item">
+      <span class="extract-label">Entry</span>
+      <div class="extract-value">${data.entry || '???'}</div>
+    </div>
+    <div class="extract-item">
+      <span class="extract-label">Lot Size</span>
+      <div class="extract-value" style="color:var(--gold)">${data.lot || '???'}</div>
+    </div>
+    <div class="extract-item">
+      <span class="extract-label">Stop Loss</span>
+      <div class="extract-value" style="color:var(--red)">${data.sl || '???'}</div>
+    </div>
+    <div class="extract-item">
+      <span class="extract-label">Take Profit</span>
+      <div class="extract-value" style="color:var(--green)">${data.tp || '???'}</div>
+    </div>
+    <div class="extract-item">
+      <span class="extract-label">Exit Price</span>
+      <div class="extract-value">${data.exit || '???'}</div>
+    </div>
+    <div class="extract-item">
+      <span class="extract-label">P&L ($)</span>
+      <div class="extract-value" style="color:${(data.pnl || 0) >= 0 ? 'var(--green)' : 'var(--red)'}">${data.pnl || '???'}</div>
+    </div>
+    <div class="extract-item">
+      <span class="extract-label">Date</span>
+      <div class="extract-value">${data.date || '???'}</div>
+    </div>
+    <div class="extract-item">
+      <span class="extract-label">Time</span>
+      <div class="extract-value">${data.time || '???'}</div>
+    </div>
+  `;
+
+  document.getElementById('extractModal').classList.add('show');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove('show');
+}
+
+function applyExtractedTrade() {
+  if (!currentExtractedData) return;
+
+  const data = currentExtractedData;
+  
+  if (data.date) document.getElementById('tradeDate').value = data.date;
+  if (data.time) document.getElementById('tradeTime').value = data.time;
+  if (data.pair) {
+    const pairSelect = document.getElementById('tradePair');
+    const cleanedPair = data.pair.replace('.', '').replace('/', ''); // Try simple matching
+    // Attempt to select correctly
+    for (let opt of pairSelect.options) {
+      if (opt.value.replace('/', '') === cleanedPair || opt.value === data.pair) {
+        pairSelect.value = opt.value;
+        break;
+      }
+    }
+  }
+  
+  if (data.direction) setDirection(data.direction.toLowerCase());
+  if (data.entry) document.getElementById('entryPrice').value = data.entry;
+  if (data.sl) document.getElementById('stopLoss').value = data.sl;
+  if (data.tp) document.getElementById('takeProfit').value = data.tp;
+  if (data.lot) document.getElementById('lotSize').value = data.lot;
+  if (data.exit) document.getElementById('exitPrice').value = data.exit;
+  if (data.pnl) {
+    document.getElementById('pnlAmount').value = data.pnl;
+    const resultEl = document.getElementById('tradeResult');
+    if (resultEl) {
+      resultEl.value = parseFloat(data.pnl) >= 0 ? 'WIN' : 'LOSS';
+    }
+  }
+  
+  calcRR();
+  closeModal('extractModal');
+  showToast('✨ Form auto-filled!');
 }
 
 // ─── INIT ────────────────────────────────────────────

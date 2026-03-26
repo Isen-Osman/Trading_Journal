@@ -22,6 +22,7 @@ def init_db(db_path: str):
             notes     TEXT,
             lot       REAL,
             rr        TEXT,
+            image     TEXT,
             created   TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ''')

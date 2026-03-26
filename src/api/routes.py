@@ -12,9 +12,13 @@ def create_trade_blueprint(trade_service: TradeService, ai_service: AIService):
 
     @api.route('/trades', methods=['POST'])
     def add_trade():
-        data = request.json
-        trade = trade_service.add_trade(data)
-        return jsonify(trade.to_dict()), 201
+        try:
+            data = request.json
+            trade = trade_service.add_trade(data)
+            return jsonify(trade.to_dict()), 201
+        except Exception as e:
+            print(f"❌ Error adding trade: {e}")
+            return jsonify({'error': str(e)}), 400
 
     @api.route('/trades/<int:trade_id>', methods=['DELETE'])
     def delete_trade(trade_id):
@@ -54,5 +58,20 @@ def create_trade_blueprint(trade_service: TradeService, ai_service: AIService):
             mime_type = file.mimetype
             analysis = ai_service.analyze_chart(image_data, mime_type)
             return jsonify({'analysis': analysis})
+
+    @api.route('/ai/extract-trade', methods=['POST'])
+    def extract_trade():
+        if 'file' not in request.files:
+            return jsonify({'error': 'No file part'}), 400
+        
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({'error': 'No selected file'}), 400
+            
+        if file:
+            image_data = file.read()
+            mime_type = file.mimetype
+            data = ai_service.extract_trade_data(image_data, mime_type)
+            return jsonify(data)
 
     return api
